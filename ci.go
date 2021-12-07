@@ -995,3 +995,33 @@ func (s *CIService) DeleteGuetzli(ctx context.Context) (*Response, error) {
 	resp, err := s.client.send(ctx, sendOpt)
 	return resp, err
 }
+
+type GetFaceEffectResult struct {
+	XMLName     xml.Name `xml:"Response"`
+	ResultImage string   `xml:"ResultImage,omitempty"`
+	ResultMask  string   `xml:"ResultMask,omitempty"`
+}
+
+// 人脸特效 https://cloud.tencent.com/document/product/460/47197#.E8.AF.B7.E6.B1.82
+func (s *CIService) GetFaceEffect(ctx context.Context, name, effectType string, opt *ObjectGetOptions, id ...string) (*GetFaceEffectResult, *Response, error) {
+	var u string
+	if len(id) == 1 {
+		u = fmt.Sprintf("/%s?versionId=%s&ci-process=face-effect&type=%s", encodeURIComponent(name), id[0], effectType)
+	} else if len(id) == 0 {
+		u = fmt.Sprintf("/%s?ci-process=face-effect&type=%s", encodeURIComponent(name), effectType)
+	} else {
+		return nil, nil, errors.New("wrong params")
+	}
+
+	var res GetFaceEffectResult
+	sendOpt := sendOptions{
+		baseURL:   s.client.BaseURL.BucketURL,
+		uri:       u,
+		method:    http.MethodGet,
+		optQuery:  opt,
+		optHeader: opt,
+		result:    &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
