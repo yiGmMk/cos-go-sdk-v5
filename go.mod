@@ -13,5 +13,3 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.194
 	github.com/tencentyun/qcloud-cos-sts-sdk v0.0.0-20211103070839-7e1312fbe18b
 )
-
-replace github.com/tencentyun/cos-go-sdk-v5 0.7.33 => github.com/yiGmMk/cos-go-sdk-v5 v1.0.0
